@@ -9,6 +9,7 @@ phases:
   install:
     commands:
       - apt-get update -y && apt-get install -y git
+      - yum install -y dos2unix
   pre_build:
     commands:
       - echo "This is Codecommit Repo URL - $CODEBUILD_SOURCE_REPO_URL"
