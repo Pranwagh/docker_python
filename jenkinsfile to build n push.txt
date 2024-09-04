@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    environment {
+        registry = 'pranav8999/pythonapp'
+        dockerImage=''
+        registryCredential = 'dockerhub_id' 
+    }
+    
+    stages {
+        stage('checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'p', url: 'https://github.com/Pranwagh/image_creation_pipeline.git']])
+            }
+        }
+        
+        stage('Build Docker image'){
+            steps{
+                script {
+                dockerImage = docker.build(registry)   // + of jnk is dont need to write big scripts just use docker.build() function & pass imagename i.e registry nam 
+                }
+            }
+            
+        }
+        stage ('uploading image') {
+            steps{
+                script{
+                    docker.withRegistry('', registryCredential) {        // use function withRegistry
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+
+    }
+}
